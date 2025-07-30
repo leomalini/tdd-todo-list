@@ -1,175 +1,83 @@
-import { useState, useEffect, useMemo } from 'react';
-import { Todo, TodoFilter } from '@/types/todo';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
+import { useState, useEffect, useMemo } from "react";
+import { Todo, TodoFilter } from "@/types/todo";
 
-export const useTodos = (userId?: string) => {
+const STORAGE_KEY = "todos";
+
+export const useTodos = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [filter, setFilter] = useState<TodoFilter>('all');
+  const [filter, setFilter] = useState<TodoFilter>("all");
   const [loading, setLoading] = useState(false);
-  const { toast } = useToast();
 
-  // Load todos from Supabase
-  const loadTodos = async () => {
-    if (!userId) return;
-    
-    setLoading(true);
-    try {
-      const { data, error } = await supabase
-        .from('todos')
-        .select('*')
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-
-      const formattedTodos = data.map(todo => ({
-        id: todo.id,
-        text: todo.text,
-        completed: todo.completed,
-        createdAt: new Date(todo.created_at),
-        completedAt: todo.completed_at ? new Date(todo.completed_at) : undefined,
-      }));
-
-      setTodos(formattedTodos);
-    } catch (error: any) {
-      toast({
-        title: "Error loading todos",
-        description: error.message,
-        variant: "destructive",
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  // Load todos from localStorage on mount
   useEffect(() => {
-    loadTodos();
-  }, [loadTodos, userId]);
+    try {
+      const savedTodos = localStorage.getItem(STORAGE_KEY);
+      if (savedTodos) {
+        const parsedTodos = JSON.parse(savedTodos).map((todo: Todo) => ({
+          ...todo,
+          createdAt: new Date(todo.createdAt),
+          completedAt: todo.completedAt
+            ? new Date(todo.completedAt)
+            : undefined,
+        }));
+        setTodos(parsedTodos);
+      }
+    } catch (error) {
+      console.error("Error loading todos from localStorage:", error);
+    }
+  }, []);
 
-  const addTodo = async (text: string) => {
+  // Save todos to localStorage whenever todos change
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+    } catch (error) {
+      console.error("Error saving todos to localStorage:", error);
+    }
+  }, [todos]);
+
+  const addTodo = (text: string) => {
     const trimmedText = text.trim();
-    if (!trimmedText || !userId) return;
+    if (!trimmedText) return;
 
-    try {
-      const { data, error } = await supabase
-        .from('todos')
-        .insert({
-          text: trimmedText,
-          user_id: userId,
-        })
-        .select()
-        .single();
+    const newTodo: Todo = {
+      id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+      text: trimmedText,
+      completed: false,
+      createdAt: new Date(),
+    };
 
-      if (error) throw error;
-
-      const newTodo: Todo = {
-        id: data.id,
-        text: data.text,
-        completed: data.completed,
-        createdAt: new Date(data.created_at),
-        completedAt: data.completed_at ? new Date(data.completed_at) : undefined,
-      };
-
-      setTodos(prev => [newTodo, ...prev]);
-    } catch (error: any) {
-      toast({
-        title: "Error adding todo",
-        description: error.message,
-        variant: "destructive",
-      });
-    }
+    setTodos((prev) => [...prev, newTodo]);
   };
 
-  const toggleTodo = async (id: string) => {
-    const todo = todos.find(t => t.id === id);
-    if (!todo || !userId) return;
-
-    const completed = !todo.completed;
-    const completedAt = completed ? new Date() : null;
-
-    try {
-      const { error } = await supabase
-        .from('todos')
-        .update({ 
-          completed,
-          completed_at: completedAt?.toISOString()
-        })
-        .eq('id', id)
-        .eq('user_id', userId);
-
-      if (error) throw error;
-
-      setTodos(prev =>
-        prev.map(todo =>
-          todo.id === id
-            ? {
-                ...todo,
-                completed,
-                completedAt,
-              }
-            : todo
-        )
-      );
-    } catch (error: any) {
-      toast({
-        title: "Error updating todo",
-        description: error.message,
-        variant: "destructive",
-      });
-    }
+  const toggleTodo = (id: string) => {
+    setTodos((prev) =>
+      prev.map((todo) =>
+        todo.id === id
+          ? {
+              ...todo,
+              completed: !todo.completed,
+              completedAt: !todo.completed ? new Date() : undefined,
+            }
+          : todo
+      )
+    );
   };
 
-  const deleteTodo = async (id: string) => {
-    if (!userId) return;
-
-    try {
-      const { error } = await supabase
-        .from('todos')
-        .delete()
-        .eq('id', id)
-        .eq('user_id', userId);
-
-      if (error) throw error;
-
-      setTodos(prev => prev.filter(todo => todo.id !== id));
-    } catch (error: any) {
-      toast({
-        title: "Error deleting todo",
-        description: error.message,
-        variant: "destructive",
-      });
-    }
+  const deleteTodo = (id: string) => {
+    setTodos((prev) => prev.filter((todo) => todo.id !== id));
   };
 
-  const clearCompleted = async () => {
-    if (!userId) return;
-
-    try {
-      const { error } = await supabase
-        .from('todos')
-        .delete()
-        .eq('user_id', userId)
-        .eq('completed', true);
-
-      if (error) throw error;
-
-      setTodos(prev => prev.filter(todo => !todo.completed));
-    } catch (error: any) {
-      toast({
-        title: "Error clearing completed todos",
-        description: error.message,
-        variant: "destructive",
-      });
-    }
+  const clearCompleted = () => {
+    setTodos((prev) => prev.filter((todo) => !todo.completed));
   };
 
   const filteredTodos = useMemo(() => {
-    return todos.filter(todo => {
+    return todos.filter((todo) => {
       switch (filter) {
-        case 'active':
+        case "active":
           return !todo.completed;
-        case 'completed':
+        case "completed":
           return todo.completed;
         default:
           return true;
@@ -177,11 +85,15 @@ export const useTodos = (userId?: string) => {
     });
   }, [todos, filter]);
 
-  const activeTodosCount = useMemo(() => 
-    todos.filter(todo => !todo.completed).length, [todos]);
+  const activeTodosCount = useMemo(
+    () => todos.filter((todo) => !todo.completed).length,
+    [todos]
+  );
 
-  const completedTodosCount = useMemo(() => 
-    todos.filter(todo => todo.completed).length, [todos]);
+  const completedTodosCount = useMemo(
+    () => todos.filter((todo) => todo.completed).length,
+    [todos]
+  );
 
   return {
     todos,

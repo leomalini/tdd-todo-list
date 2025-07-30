@@ -1,73 +1,134 @@
-# Welcome to your Lovable project
+# Todo List App - Local Storage
 
-## Project info
+Uma aplicação de lista de tarefas moderna construída com React, TypeScript e Tailwind CSS, utilizando localStorage para persistência de dados.
 
-**URL**: https://lovable.dev/projects/8c6a5485-5c17-4e64-9c2e-18b3b863f6f2
+## 🚀 Funcionalidades
 
-## How can I edit this code?
+- ✅ Adicionar novas tarefas
+- ✅ Marcar tarefas como concluídas
+- ✅ Filtrar tarefas (Todas, Ativas, Concluídas)
+- ✅ Excluir tarefas individuais
+- ✅ Limpar todas as tarefas concluídas
+- ✅ Persistência local com localStorage
+- ✅ Interface responsiva e moderna
+- ✅ Notificações com toast
+- ✅ Testes unitários
 
-There are several ways of editing your application.
+## 🛠️ Tecnologias
 
-**Use Lovable**
+- **React 18** - Biblioteca para interfaces de usuário
+- **TypeScript** - Superset do JavaScript com tipagem estática
+- **Vite** - Build tool e dev server
+- **Tailwind CSS** - Framework CSS utilitário
+- **Shadcn/ui** - Componentes de UI
+- **Lucide React** - Ícones
+- **Vitest** - Framework de testes
+- **React Testing Library** - Utilitários para testes
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/8c6a5485-5c17-4e64-9c2e-18b3b863f6f2) and start prompting.
+## 📦 Instalação
 
-Changes made via Lovable will be committed automatically to this repo.
+1. Clone o repositório:
 
-**Use your preferred IDE**
+```bash
+git clone <url-do-repositorio>
+cd todo-ninja-crafted
+```
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+2. Instale as dependências:
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+```bash
+npm install
+```
 
-Follow these steps:
+3. Execute o projeto em modo de desenvolvimento:
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+4. Acesse o aplicativo em `http://localhost:8080`
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 🧪 Testes
 
-**Use GitHub Codespaces**
+Execute os testes unitários:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```bash
+npm run test
+```
 
-## What technologies are used for this project?
+Execute os testes com interface gráfica:
 
-This project is built with:
+```bash
+npm run test:ui
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## 📱 Como Usar
 
-## How can I deploy this project?
+1. **Adicionar Tarefa**: Digite sua tarefa no campo de entrada e pressione Enter ou clique no botão "Add"
+2. **Marcar como Concluída**: Clique na checkbox ao lado da tarefa
+3. **Filtrar Tarefas**: Use os botões "All", "Active" ou "Completed" para filtrar
+4. **Excluir Tarefa**: Clique no ícone de lixeira ao lado da tarefa
+5. **Limpar Concluídas**: Clique em "Clear completed" para remover todas as tarefas concluídas
 
-Simply open [Lovable](https://lovable.dev/projects/8c6a5485-5c17-4e64-9c2e-18b3b863f6f2) and click on Share -> Publish.
+## 💾 Armazenamento
 
-## Can I connect a custom domain to my Lovable project?
+Os dados são armazenados localmente no navegador usando `localStorage`. Isso significa que:
 
-Yes, you can!
+- ✅ Suas tarefas persistem entre sessões do navegador
+- ✅ Não é necessário conexão com internet
+- ✅ Os dados ficam apenas no seu computador
+- ⚠️ Limpar dados do navegador apagará as tarefas
+- ⚠️ As tarefas não são sincronizadas entre dispositivos
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## 🏗️ Scripts Disponíveis
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+- `npm run dev` - Inicia o servidor de desenvolvimento
+- `npm run build` - Gera build de produção
+- `npm run preview` - Visualiza o build de produção
+- `npm run lint` - Executa o linter
+- `npm run test` - Executa os testes
+- `npm run test:ui` - Executa os testes com interface gráfica
+
+## 🎨 Personalização
+
+O projeto usa Tailwind CSS com um tema customizado. As cores principais podem ser modificadas no arquivo `src/index.css` nas variáveis CSS personalizadas:
+
+```css
+:root {
+  --primary: 142 76% 36%;
+  --todo-gradient-start: 142 76% 36%;
+  --todo-gradient-end: 158 64% 52%;
+  /* ... outras variáveis */
+}
+```
+
+## 📁 Estrutura do Projeto
+
+```
+src/
+├── components/          # Componentes React
+│   ├── ui/             # Componentes de UI (shadcn)
+│   ├── TodoApp.tsx     # Componente principal
+│   └── TodoItem.tsx    # Item individual da lista
+├── hooks/              # Hooks customizados
+│   ├── useTodos.ts     # Hook para gerenciar todos
+│   └── use-toast.ts    # Hook para notificações
+├── types/              # Definições de tipos TypeScript
+├── lib/                # Utilitários
+└── pages/              # Páginas da aplicação
+```
+
+## 🔧 Principais Mudanças
+
+Este projeto foi modificado para usar armazenamento local ao invés do Supabase:
+
+1. **Removido**: Dependências do Supabase (`@supabase/supabase-js`)
+2. **Removido**: Sistema de autenticação
+3. **Removido**: Componentes de Auth
+4. **Modificado**: Hook `useTodos` para usar localStorage
+5. **Simplificado**: Página Index sem autenticação
+6. **Atualizado**: Testes para funcionar com localStorage
+
+## 📝 Licença
+
+Este projeto está sob a licença MIT.
