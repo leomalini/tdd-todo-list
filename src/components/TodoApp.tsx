@@ -72,23 +72,21 @@ const TodoApp: React.FC = () => {
   return (
     <div className="min-h-screen bg-background p-4">
       <div className="max-w-2xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold bg-todo-gradient bg-clip-text text-transparent mb-2">
             Todo List
           </h1>
           <p className="text-muted-foreground">
-            Organize your tasks efficiently with our modern todo app
+            Organize your tasks efficiently
           </p>
         </div>
 
-        {/* Add Todo Input */}
         <Card className="p-6 mb-6 bg-todo-surface border-border">
           <div className="flex gap-3">
             <Input
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
-              onKeyPress={handleKeyPress}
+              onKeyDown={handleKeyPress}
               placeholder="Add a new todo..."
               className="flex-1 bg-background border-border focus:ring-primary"
             />
@@ -104,7 +102,6 @@ const TodoApp: React.FC = () => {
           </div>
         </Card>
 
-        {/* Filter Buttons */}
         <div className="flex justify-center gap-2 mb-6">
           {(["all", "active", "completed"] as TodoFilter[]).map(
             (filterType) => (
@@ -125,7 +122,6 @@ const TodoApp: React.FC = () => {
           )}
         </div>
 
-        {/* Todo List */}
         <div className="space-y-3 mb-6">
           {filteredTodos.length === 0 ? (
             <Card className="p-8 text-center bg-todo-surface border-border">
@@ -147,7 +143,6 @@ const TodoApp: React.FC = () => {
           )}
         </div>
 
-        {/* Footer Stats & Actions */}
         <Card className="p-4 bg-todo-surface border-border">
           <div className="flex items-center justify-between">
             <div className="text-sm text-muted-foreground">
