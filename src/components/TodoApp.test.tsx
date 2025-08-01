@@ -86,18 +86,15 @@ describe("TodoApp", () => {
     await user.type(input, "Active todo{enter}");
     await user.type(input, "Completed todo{enter}");
 
-    // Complete the second todo
     const checkboxes = screen.getAllByRole("checkbox");
     await user.click(checkboxes[1]);
 
-    // Filter by active
     const activeFilter = screen.getByTestId("filter-active");
     await user.click(activeFilter);
 
     expect(screen.getByText("Active todo")).toBeInTheDocument();
     expect(screen.queryByText("Completed todo")).not.toBeInTheDocument();
 
-    // Filter by completed
     const completedFilter = screen.getByTestId("filter-completed");
     await user.click(completedFilter);
 
@@ -138,7 +135,6 @@ describe("TodoApp", () => {
     await user.type(input, "Todo 1{enter}");
     await user.type(input, "Todo 2{enter}");
 
-    // Complete first todo
     const checkboxes = screen.getAllByRole("checkbox");
     await user.click(checkboxes[0]);
 

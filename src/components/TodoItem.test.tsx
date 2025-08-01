@@ -8,15 +8,15 @@ const mockTodo: Todo = {
   id: "1",
   text: "Test todo",
   completed: false,
-  createdAt: new Date("2024-01-01"),
+  createdAt: new Date("2025-01-01"),
 };
 
 const mockCompletedTodo: Todo = {
   id: "2",
   text: "Completed todo",
   completed: true,
-  createdAt: new Date("2024-01-01"),
-  completedAt: new Date("2024-01-02"),
+  createdAt: new Date("2025-01-01"),
+  completedAt: new Date("2025-01-02"),
 };
 
 describe("TodoItem", () => {

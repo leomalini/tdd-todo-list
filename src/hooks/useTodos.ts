@@ -8,7 +8,6 @@ export const useTodos = () => {
   const [filter, setFilter] = useState<TodoFilter>("all");
   const [loading, setLoading] = useState(false);
 
-  // Load todos from localStorage on mount
   useEffect(() => {
     try {
       const savedTodos = localStorage.getItem(STORAGE_KEY);
@@ -27,7 +26,6 @@ export const useTodos = () => {
     }
   }, []);
 
-  // Save todos to localStorage whenever todos change
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));

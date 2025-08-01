@@ -2,7 +2,6 @@ import { renderHook, act } from "@testing-library/react";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import { useTodos } from "./useTodos";
 
-// Mock localStorage
 const mockLocalStorage = (() => {
   let store: { [key: string]: string } = {};
   return {
