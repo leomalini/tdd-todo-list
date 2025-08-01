@@ -25,8 +25,6 @@ Uma aplicação de lista de tarefas moderna construída com React, TypeScript e 
 - **Vitest** - Framework de testes
 - **React Testing Library** - Utilitários para testes
 
-```
-
 ## 📱 Como Usar
 
 1. **Adicionar Tarefa**: Digite sua tarefa no campo de entrada e pressione Enter ou clique no botão "Add"
@@ -45,8 +43,6 @@ Os dados são armazenados localmente no navegador usando `localStorage`. Isso si
 - ⚠️ Limpar dados do navegador apagará as tarefas
 - ⚠️ As tarefas não são sincronizadas entre dispositivos
 
-
 ## 📝 Licença
 
 Este projeto está sob a licença MIT.
-```
